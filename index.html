@@ -37,27 +37,22 @@
         </div>
       </div>
       <div id="footer">
-        <span>Test build v0.14.0</span>
-        <a id="feedback" target="_blank" rel="noopener" hidden>Send feedback</a>
+        <span>Test build v0.15.0</span>
+        <span id="feedback-note">Play 5 levels, then tap <b>Feedback</b> in the game</span>
       </div>
     </div>
     <script>
       // ---------------------------------------------------------------------------------------------------------------
       // FEEDBACK DESTINATION — the only line to edit after a build. Leave empty to hide every feedback button.
       // Placeholders filled by the game: {version} {content} {where} {level} {level_id} {level_title} {stars} {moves}
-      // {best} {screen} {device}. Example (GitHub issue):
+      // {best} {screen} {device} {levels_played}. Feedback opens in the game after 5 finished levels (playtest rule).
+      // Example (GitHub issue):
       //   "https://github.com/OWNER/REPO/issues/new?title=Feedback%20{level}&body=Level%20{level}%20({level_title})%2C%20v{version}%0A%0A"
-      window.FOLDMATRIX_FEEDBACK_URL = "https://github.com/ajaykumar-wq/fold-play/issues/new?template=feedback.yml&title=Feedback%3A%20level%20{level}&level={level}%20{level_title}&version={version}%20({content})&details=stars%20{stars}%2C%20folds%20{moves}%2C%20best%20{best}%2C%20screen%20{screen}%2C%20{device}%2C%20from%20{where}";
+      window.FOLDMATRIX_FEEDBACK_URL = "https://github.com/ajaykumar-wq/fold-play/issues/new?template=feedback.yml&title=Feedback%3A%20level%20{level}&level={level}%20{level_title}&levels_played={levels_played}&version={version}%20({content})&details=stars%20{stars}%2C%20folds%20{moves}%2C%20best%20{best}%2C%20screen%20{screen}%2C%20{device}%2C%20from%20{where}";
       // ---------------------------------------------------------------------------------------------------------------
 
-      var feedback = document.querySelector("#feedback");
-      if (window.FOLDMATRIX_FEEDBACK_URL) {
-        feedback.href = window.FOLDMATRIX_FEEDBACK_URL
-          .replace(/\{version\}/g, encodeURIComponent("0.14.0"))
-          .replace(/\{where\}/g, "page")
-          .replace(/\{[a-z_]+\}/g, "");
-        feedback.hidden = false;
-      }
+      // No page-level feedback link: the in-game button unlocks after 5 levels and fills in the details.
+      if (!window.FOLDMATRIX_FEEDBACK_URL) document.querySelector("#feedback-note").hidden = true;
 
       var canvas = document.querySelector("#unity-canvas");
       var fill = document.querySelector("#fill");
@@ -72,7 +67,7 @@
         streamingAssetsUrl: "StreamingAssets",
         companyName: "IICT",
         productName: "Fold Matrix",
-        productVersion: "0.14.0",
+        productVersion: "0.15.0",
         // Phones report 3x pixel ratios; 2x keeps the paper crisp at a fraction of the fill cost.
         devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
         showBanner: function (text, type) { if (type === "error") msg.textContent = text; },
