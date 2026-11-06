@@ -1,31 +1,97 @@
 name: Playtest feedback
-description: Tell us how a level or the game felt (the game fills in level and version for you).
+description: Tell us how Fold Matrix felt. The game opens this form after you finish 5 levels and fills in the details.
 title: "Feedback: "
 labels: ["feedback"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for playtesting! Feedback is accepted from players who have **finished at least 5 levels**.
+        The game fills in *Levels played*, *Level*, *Game version* and *Details*. Please leave those as they are.
+  - type: input
+    id: levels_played
+    attributes:
+      label: Levels played
+      description: Filled in by the game (levels you have finished). Feedback needs 5 or more.
+    validations:
+      required: true
   - type: input
     id: level
     attributes:
       label: Level
       description: Filled in by the game, e.g. "4-1 First Light". Leave as is.
   - type: dropdown
-    id: feeling
+    id: fun
     attributes:
-      label: How did it feel?
+      label: How much fun was it?
       options:
-        - Fun
-        - Too easy
-        - Too hard
-        - Confusing
-        - Something looked wrong
-        - Bug / crash
+        - 5 — loved it
+        - 4 — fun
+        - 3 — okay
+        - 2 — not much
+        - 1 — not fun
     validations:
       required: true
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: How hard were the puzzles?
+      options:
+        - Too easy
+        - Just right
+        - Too hard
+        - Mixed — some unfair jumps
+    validations:
+      required: true
+  - type: dropdown
+    id: understood
+    attributes:
+      label: Did you understand what each fold would do before you made it?
+      options:
+        - Yes, almost always
+        - Mostly
+        - Sometimes
+        - Rarely
+    validations:
+      required: true
+  - type: dropdown
+    id: look
+    attributes:
+      label: How do the art and screens look?
+      options:
+        - 5 — beautiful
+        - 4 — good
+        - 3 — okay
+        - 2 — rough
+        - 1 — confusing / hard to read
+    validations:
+      required: true
+  - type: dropdown
+    id: again
+    attributes:
+      label: Would you play again tomorrow?
+      options:
+        - Yes
+        - Maybe
+        - No
+    validations:
+      required: true
+  - type: dropdown
+    id: feeling
+    attributes:
+      label: Anything specific?
+      description: Pick the closest, or "Nothing specific".
+      options:
+        - Nothing specific
+        - A level felt unfair
+        - Something was confusing
+        - Something looked wrong
+        - Bug / crash
   - type: textarea
     id: what
     attributes:
-      label: What happened?
-      description: What were you trying to do, and what did you expect?
+      label: Tell us more
+      description: Your favourite moment, what confused you, which level, and what you expected to happen.
     validations:
       required: true
   - type: input

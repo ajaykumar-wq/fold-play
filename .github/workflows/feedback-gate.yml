@@ -1,0 +1,50 @@
+# Playtest rule: feedback is accepted from players who have finished at least 5 levels.
+# The game fills "Levels played" in the form. Reports with 5+ get the "accepted" label; reports with fewer
+# (or without the field) are closed politely with "needs-5-levels" and can be reopened after more play.
+name: Feedback gate
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  issues: write
+
+jobs:
+  gate:
+    if: contains(github.event.issue.labels.*.name, 'feedback')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const MIN = 5;
+            const issue = context.payload.issue;
+            const body = issue.body || "";
+            const m = body.match(/###\s*Levels played\s*\n+\s*(\d+)/i);
+            const played = m ? parseInt(m[1], 10) : NaN;
+            const repo = { owner: context.repo.owner, repo: context.repo.repo, issue_number: issue.number };
+            async function ensureLabel(name, color, description) {
+              try { await github.rest.issues.getLabel({ owner: repo.owner, repo: repo.repo, name }); }
+              catch { await github.rest.issues.createLabel({ owner: repo.owner, repo: repo.repo, name, color, description }); }
+            }
+            await ensureLabel("accepted", "2EC4B6", "Playtest feedback after 5+ levels");
+            await ensureLabel("needs-5-levels", "FCD34D", "Play at least 5 levels before sending feedback");
+            if (played >= MIN) {
+              await github.rest.issues.addLabels({ ...repo, labels: ["accepted"] });
+              try { await github.rest.issues.removeLabel({ ...repo, name: "needs-5-levels" }); } catch {}
+              if (issue.state === "closed") await github.rest.issues.update({ ...repo, state: "open" }); // edited to 5+
+              if (context.payload.action === "opened") {
+                await github.rest.issues.createComment({ ...repo, body:
+                  `Thank you! Your feedback after ${played} levels has been recorded. 🦊` });
+              }
+            } else {
+              await github.rest.issues.addLabels({ ...repo, labels: ["needs-5-levels"] });
+              if (issue.state === "closed") return; // already closed with the note: no repeat comment on edits
+              await github.rest.issues.createComment({ ...repo, body:
+                `Thanks for trying Fold Matrix! We collect feedback from players who have finished at least ${MIN} levels` +
+                (Number.isNaN(played) ? "" : ` (this report says ${played})`) +
+                `, so the folds have had a chance to click. Play a few more, then tap **Feedback** in the game — ` +
+                `it fills this in for you. You can also edit this issue's "Levels played" and reopen it.` });
+              await github.rest.issues.update({ ...repo, state: "closed", state_reason: "not_planned" });
+            }
