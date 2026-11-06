@@ -37,7 +37,7 @@
         </div>
       </div>
       <div id="footer">
-        <span>Test build v0.12.0</span>
+        <span>Test build v0.13.0</span>
         <a id="feedback" target="_blank" rel="noopener" hidden>Send feedback</a>
       </div>
     </div>
@@ -53,7 +53,7 @@
       var feedback = document.querySelector("#feedback");
       if (window.FOLDMATRIX_FEEDBACK_URL) {
         feedback.href = window.FOLDMATRIX_FEEDBACK_URL
-          .replace(/\{version\}/g, encodeURIComponent("0.12.0"))
+          .replace(/\{version\}/g, encodeURIComponent("0.13.0"))
           .replace(/\{where\}/g, "page")
           .replace(/\{[a-z_]+\}/g, "");
         feedback.hidden = false;
@@ -72,7 +72,7 @@
         streamingAssetsUrl: "StreamingAssets",
         companyName: "IICT",
         productName: "Fold Matrix",
-        productVersion: "0.12.0",
+        productVersion: "0.13.0",
         // Phones report 3x pixel ratios; 2x keeps the paper crisp at a fraction of the fill cost.
         devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
         showBanner: function (text, type) { if (type === "error") msg.textContent = text; },
